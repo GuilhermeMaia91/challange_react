@@ -1,36 +1,45 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
+import { login } from '../auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
+    setLoading(true);
+    setError(null);
     event.preventDefault();
 
     try {
       const response = await axios.post('http://localhost:3000/login', {
-        email,
-        password
+        user: {
+          email,
+          password
+        }
       });
 
-      if (response.data.success) {
+      if (response.data.status.code == 200) {
+        login();
         setSuccess('Login bem-sucedido!');
         setError('');
         localStorage.setItem('authToken', response.headers.getAuthorization());
+        navigate('/home')
       } else {
         setError('Credenciais inválidas.');
         setSuccess('');
       }
     } catch (error) {
-      // Gerenciar erros
       setError('Erro ao tentar login.');
       setSuccess('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,9 +71,12 @@ const Login = () => {
           </Form.Group>
 
           <Button variant="primary" type="submit" className="w-100">
-            Login
+            {loading ? 'Entrando...' : 'Login'}
           </Button>
         </Form>
+        <div className="mt-3">
+          <Link to="/register">Não tem uma conta? Registre-se</Link>
+        </div>
       </div>
     </Container>
   );
