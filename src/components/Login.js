@@ -30,7 +30,7 @@ const Login = () => {
         setSuccess('Login bem-sucedido!');
         setError('');
         localStorage.setItem('authToken', response.headers.getAuthorization());
-        navigate('/home')
+        navigate('/countries')
       } else {
         setError('Credenciais inválidas.');
         setSuccess('');

@@ -48,10 +48,9 @@ const ListPage = () => {
 
   const applyFilters = () => {
     const filtered = countries.filter(country =>
-      country.name.toLowerCase().includes(filter.name.toLowerCase()) ||
+      country.name.toLowerCase().includes(filter.name.toLowerCase()) &&
       country.name_short.toLowerCase().includes(filter.name_short.toLowerCase())
     );
-    debugger;
     setFilteredCountries(filtered);
   };
 
